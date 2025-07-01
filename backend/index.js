@@ -14,6 +14,7 @@ const port = process.env.PORT || 4000
 connectDB()
 connectCloudinary()
 
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cors())
 

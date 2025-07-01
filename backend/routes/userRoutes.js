@@ -1,6 +1,16 @@
 const express = require('express')
 const userRouter = express.Router()
-const {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment} = require('../controllers/userController')
+const {
+    registerUser,
+    loginUser, 
+    getProfile, 
+    updateProfile, 
+    bookAppointment, 
+    listAppointment, 
+    cancelAppointment, 
+    paymentSslcommerz, 
+    verifyPayment, 
+} = require('../controllers/userController')
 const { userAuthMiddleware } = require('../middlewares/authUser')
 const { upload } = require('../middlewares/multer')
 
@@ -12,5 +22,8 @@ userRouter.put('/update-profile', upload.single('image'), userAuthMiddleware, up
 userRouter.post('/book-appointment', userAuthMiddleware, bookAppointment)
 userRouter.get('/appointments', userAuthMiddleware, listAppointment)
 userRouter.post('/cancel-appointment', userAuthMiddleware, cancelAppointment)
+
+userRouter.post('/payment-sslcommerz', userAuthMiddleware, paymentSslcommerz)
+userRouter.post('/payment-success', verifyPayment)
 
 module.exports = userRouter
