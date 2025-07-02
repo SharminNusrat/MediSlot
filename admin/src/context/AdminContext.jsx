@@ -7,6 +7,8 @@ export const AdminContext = createContext()
 const AdminContextProvider = (props) => {
     const [admintoken, setAdminToken] = useState(localStorage.getItem('admintoken') ? localStorage.getItem('admintoken') : '')
     const [doctors, setDoctors] = useState([])
+    const [appointments, setAppointments] = useState([])
+    const [dashboardData, setDashboardData] = useState(false)
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
 
@@ -38,11 +40,58 @@ const AdminContextProvider = (props) => {
         }
     }
 
+    const getAllAppointments = async () => {
+        try {
+            const {data} = await axios.get(backendUrl + '/api/admin/appointments', {headers: {admintoken}})
+
+            if(data.success) {
+                setAppointments(data.appointments)
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
+    const cancelAppointment = async (appointmentId) => {
+        try {
+            const {data} = await axios.post(backendUrl + '/api/admin/cancel-appointment', {appointmentId}, {headers: {admintoken}})
+
+            if(data.success) {
+                toast.success(data.message)
+                getAllAppointments()
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
+    const getDashboardData = async () => {
+        try {
+            const {data} = await axios.get(backendUrl + '/api/admin/dashboard', {headers: {admintoken}})
+
+            if(data.success) {
+                setDashboardData(data.dashboardData)
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
     const value = {
         admintoken, setAdminToken,
         backendUrl,
         doctors, getAllDoctors,
         changeAvailability,
+        appointments, setAppointments,
+        getAllAppointments,
+        cancelAppointment,
+        dashboardData, getDashboardData,
     }
 
     return (

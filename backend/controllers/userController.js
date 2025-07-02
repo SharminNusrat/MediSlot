@@ -313,7 +313,10 @@ const verifyPayment = async (req, res) => {
     console.log('tran_id:', tran_id);
 
     if (!val_id || !tran_id) {
-        return res.status(400).send('Missing val_id or tran_id');
+        return res.json({
+            success: false,
+            message: 'Missing val_id or tran_id'
+        });
     }
 
     try {
@@ -326,7 +329,10 @@ const verifyPayment = async (req, res) => {
         res.redirect('http://localhost:5173/my-appointments?payment=success');
     } catch (error) {
         console.log(error);
-        res.status(500).send('Validation failed');
+        res.json({
+            success: false,
+            message: 'Validation failed'
+        });
     }
 }
 
